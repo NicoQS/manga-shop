@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Credentials;
+namespace App\Http\Controllers\V1\Credentials;
 
-final class DeleteController{
+final class UpdateController{
+
     public function __invoke()
     {
         //
     }
-
 }

@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Credentials;
+namespace App\Http\Controllers\V1\Services;
 
-final class StoreController{
+final class ShowController{
 
     public function __invoke()
     {
         //
     }
+
 }

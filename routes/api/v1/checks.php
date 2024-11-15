@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Checks\{
+use App\Http\Controllers\V1\Checks\{
     IndexController,
     StoreController,
     ShowController,

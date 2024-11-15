@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Services\{
+use App\Http\Controllers\V1\Services\{
     IndexController,
     StoreController,
     ShowController,
