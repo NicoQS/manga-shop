@@ -16,7 +16,7 @@ Route::get('/public/mangas', [MangaController::class, 'index']);
 
 // Acceso a rutas protegidas
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 
     Route::apiResource('categorias', CategoriaController::class);
 
