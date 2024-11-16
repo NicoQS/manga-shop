@@ -29,8 +29,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        /* $token = $user->createToken('auth_token')->plainTextToken; */
 
-        return $this->success([], 'User created successfully', HttpsResponseType::HTTP_CREATED);
+        return $this->success([], 'User created successfully', HttpsResponseType::HTTP_CREATED->value);
     }
 }
