@@ -18,7 +18,7 @@ class MangaFactory extends Factory
     {
         return [
             'titulo' => $this->faker->sentence(3),
-            'portada' => 'portadas/'. fake()->image('public/storage/portadas', 640, 480, null, false),
+            'portada' => 'portadas/'. fake()->image(storage_path('app/public/portadas'), 640, 480, null, false),
         ];
     }
 }

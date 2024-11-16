@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Elimina y crea el directorio de portadas
-        /* Storage::deleteDirectory('public/storage/portadas'); */
-       /*  Storage::makeDirectory('public/portadas'); */
+        Storage::deleteDirectory('public/portadas');
+        Storage::makeDirectory('public/portadas');
 
         // Crea un usuario de prueba
         User::factory()->create([
@@ -28,11 +28,13 @@ class DatabaseSeeder extends Seeder
         Categoria::factory(5)
             ->has(Subcategoria::factory()->count(3))
             ->create();
-
-        // Crea mangas con categorías y subcategorías
-        Manga::factory(5)
-            ->has(Categoria::factory()->count(1))
-            ->has(Subcategoria::factory()->count(1))
-            ->create();
+        // Crea mangas y asigna categorías y subcategorías
+        /* Manga::factory(5)->create()->each(function ($manga) {
+            $categoria = Categoria::inRandomOrder()->first();
+            $subcategoria = $categoria->subcategorias()->inRandomOrder()->first();
+            $manga->categoria_id = $categoria->id;
+            $manga->subcategoria_id = $subcategoria->id;
+            $manga->save();
+        }); */
     }
 }
