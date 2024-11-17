@@ -8,6 +8,7 @@ use App\Traits\HttpsResponse;
 use App\Enums\HttpsResponseType;
 use App\Http\Requests\Subcategoria\SubCategoriaStoreRequest;
 use App\Http\Requests\Subcategoria\SubCategoriaUpdateRequest;
+use App\Http\Resources\SubcategoriaResource;
 
 class SubcategoriaController extends Controller
 {
@@ -17,7 +18,32 @@ class SubcategoriaController extends Controller
      */
     public function index()
     {
-        return $this->success(Subcategoria::query()->simplePaginate(5), 'Listado de subcategorias obtenido correctamente.', HttpsResponseType::HTTP_OK->value);
+        $subcategorias = Subcategoria::paginate(3);
+        $subcategoriasResource = SubcategoriaResource::collection($subcategorias);
+
+        //para mostrar la paginacion adecuadamente
+        return $this->success(
+            [
+                'items' => $subcategoriasResource,
+                'links' => [
+                    'first' => $subcategorias->url(1),
+                    'last' => $subcategorias->url($subcategorias->lastPage()),
+                    'prev' => $subcategorias->previousPageUrl(),
+                    'next' => $subcategorias->nextPageUrl(),
+                ],
+                'meta' => [
+                    'current_page' => $subcategorias->currentPage(),
+                    'from' => $subcategorias->firstItem(),
+                    'last_page' => $subcategorias->lastPage(),
+                    'path' => $subcategorias->path(),
+                    'per_page' => $subcategorias->perPage(),
+                    'to' => $subcategorias->lastItem(),
+                    'total' => $subcategorias->total(),
+                ],
+            ],
+            'Listado de categorías obtenido correctamente.',
+            HttpsResponseType::HTTP_OK->value
+        );
     }
 
 
@@ -27,7 +53,11 @@ class SubcategoriaController extends Controller
     public function store(SubCategoriaStoreRequest $request)
     {
         $subcategoria = Subcategoria::create($request->validated());
-        return $this->success($subcategoria, 'Subcategoria creada correctamente.', HttpsResponseType::HTTP_CREATED->value);
+        return $this->success(
+            SubcategoriaResource::make($subcategoria),
+            'Subcategoria creada correctamente.',
+            HttpsResponseType::HTTP_CREATED->value
+        );
     }
 
     /**
@@ -35,7 +65,11 @@ class SubcategoriaController extends Controller
      */
     public function show(Subcategoria $subcategoria)
     {
-        return $this->success($subcategoria, 'Subcategoria obtenida correctamente.', HttpsResponseType::HTTP_OK->value);
+        return $this->success(
+            SubcategoriaResource::make($subcategoria),
+            'Subcategoria obtenida correctamente.',
+            HttpsResponseType::HTTP_OK->value
+        );
     }
 
     /**
@@ -44,7 +78,11 @@ class SubcategoriaController extends Controller
     public function update(SubCategoriaUpdateRequest $request, Subcategoria $subcategoria)
     {
         $subcategoria->update($request->validated());
-        return $this->success($subcategoria, 'Subcategoria actualizada correctamente.', HttpsResponseType::HTTP_OK->value);
+        return $this->success(
+            SubcategoriaResource::make($subcategoria),
+            'Subcategoria actualizada correctamente.',
+            HttpsResponseType::HTTP_OK->value
+        );
     }
 
     /**

@@ -15,8 +15,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Elimina y crea el directorio de portadas
-        Storage::deleteDirectory('public/portadas');
-        Storage::makeDirectory('public/portadas');
+        if (Storage::exists('public/portadas')){
+            Storage::deleteDirectory('public/portadas');
+        } else {
+            Storage::makeDirectory('public/portadas');
+        }
 
         // Crea un usuario de prueba
         User::factory()->create([
