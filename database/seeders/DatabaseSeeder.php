@@ -9,9 +9,7 @@ use App\Models\Manga;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
+
     public function run(): void
     {
         // Elimina y crea el directorio de portadas
@@ -32,13 +30,6 @@ class DatabaseSeeder extends Seeder
         Categoria::factory(5)
             ->has(Subcategoria::factory()->count(3))
             ->create();
-        // Crea mangas y asigna categorías y subcategorías
-        /* Manga::factory(5)->create()->each(function ($manga) {
-            $categoria = Categoria::inRandomOrder()->first();
-            $subcategoria = $categoria->subcategorias()->inRandomOrder()->first();
-            $manga->categoria_id = $categoria->id;
-            $manga->subcategoria_id = $subcategoria->id;
-            $manga->save();
-        }); */
+
     }
 }

@@ -3,28 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Manga;
-use Illuminate\Http\Request;
 use App\Traits\HttpsResponse;
 use App\Enums\HttpsResponseType;
 use App\Http\Requests\Manga\MangaStoreRequest;
 use App\Http\Requests\Manga\MangaUpdateRequest;
-use App\Models\Categoria;
 use App\Models\Subcategoria;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MangaResource;
+use Illuminate\Http\JsonResponse;
 
 class MangaController extends Controller
 {
     use HttpsResponse;
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+
+    public function index() : JsonResponse
     {
         $mangas = Manga::paginate(3);
         $mangasResource = MangaResource::collection($mangas);
 
-        //para mostrar la paginacion adecuadamente
+        // Debo agregar campos de links y meta para que el trait HttpsResponse pueda devolver la paginación correctamente
         return $this->success(
             [
                 'items' => $mangasResource,
@@ -44,21 +42,22 @@ class MangaController extends Controller
                     'total' => $mangas->total(),
                 ],
             ],
-            'Listado de categorías obtenido correctamente.',
+            'Listado de mangas obtenido correctamente.',
             HttpsResponseType::HTTP_OK->value
         );
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(MangaStoreRequest $request)
+    public function store(MangaStoreRequest $request) : JsonResponse
     {
         $data = $request->validated();
         try{
             DB::beginTransaction();
             $data['portada'] = $request->file('portada')->store('portadas', 'public');
+            //validar si la subcategoria pertenece a la categoria
+            if (!Subcategoria::where('id', $data['subcategoria_id'])->where('categoria_id', $data['categoria_id'])->exists()) {
+                return $this->error('La subcategoria no pertenece a la categoria.', HttpsResponseType::HTTP_BAD_REQUEST->value);
+            }
             $manga = Manga::create(
                 [
                     'titulo' => $data['titulo'],
@@ -78,10 +77,8 @@ class MangaController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Manga $manga)
+
+    public function show(Manga $manga) : JsonResponse
     {
         return $this->success(
             MangaResource::make($manga),
@@ -91,23 +88,30 @@ class MangaController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(MangaUpdateRequest $request, Manga $manga)
+    public function update(MangaUpdateRequest $request, Manga $manga) : JsonResponse
     {
-        $manga->update($request->validated());
-        return $this->success(
-            MangaResource::make($manga),
-            'Manga actualizado correctamente.',
-            HttpsResponseType::HTTP_OK->value
-        );
+        try {
+            DB::beginTransaction();
+            // Validar si la subcategoria pertenece a la categoria
+            if (!Subcategoria::where('id', $request->subcategoria_id)->where('categoria_id', $request->categoria_id)->exists()) {
+                return $this->error('La subcategoria no pertenece a la categoria.', HttpsResponseType::HTTP_BAD_REQUEST->value);
+            }
+            $manga->update($request->validated());
+            DB::commit();
+            return $this->success(
+                MangaResource::make($manga),
+                'Manga actualizado correctamente.',
+                HttpsResponseType::HTTP_OK->value
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage(), HttpsResponseType::HTTP_INTERNAL_SERVER_ERROR->value);
+        }
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Manga $manga)
+
+    public function destroy(Manga $manga) : JsonResponse
     {
         $manga->delete();
         return $this->success(null, 'Manga eliminado correctamente.', HttpsResponseType::HTTP_OK->value);

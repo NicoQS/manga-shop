@@ -3,25 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subcategoria;
-use Illuminate\Http\Request;
 use App\Traits\HttpsResponse;
 use App\Enums\HttpsResponseType;
 use App\Http\Requests\Subcategoria\SubCategoriaStoreRequest;
 use App\Http\Requests\Subcategoria\SubCategoriaUpdateRequest;
 use App\Http\Resources\SubcategoriaResource;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class SubcategoriaController extends Controller
 {
     use HttpsResponse;
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+
+    public function index() : JsonResponse
     {
         $subcategorias = Subcategoria::paginate(3);
         $subcategoriasResource = SubcategoriaResource::collection($subcategorias);
 
-        //para mostrar la paginacion adecuadamente
+        // Debo agregar campos de links y meta para que el trait HttpsResponse pueda devolver la paginación correctamente
         return $this->success(
             [
                 'items' => $subcategoriasResource,
@@ -41,29 +41,31 @@ class SubcategoriaController extends Controller
                     'total' => $subcategorias->total(),
                 ],
             ],
-            'Listado de categorías obtenido correctamente.',
+            'Listado de subcategorias obtenido correctamente.',
             HttpsResponseType::HTTP_OK->value
         );
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(SubCategoriaStoreRequest $request)
+    public function store(SubCategoriaStoreRequest $request) : JsonResponse
     {
-        $subcategoria = Subcategoria::create($request->validated());
-        return $this->success(
-            SubcategoriaResource::make($subcategoria),
-            'Subcategoria creada correctamente.',
-            HttpsResponseType::HTTP_CREATED->value
-        );
+        try {
+            DB::beginTransaction();
+            $subcategoria = Subcategoria::create($request->validated());
+            DB::commit();
+            return $this->success(
+                SubcategoriaResource::make($subcategoria),
+                'Subcategoria creada correctamente.',
+                HttpsResponseType::HTTP_CREATED->value
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage(), HttpsResponseType::HTTP_INTERNAL_SERVER_ERROR->value);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Subcategoria $subcategoria)
+
+    public function show(Subcategoria $subcategoria) : JsonResponse
     {
         return $this->success(
             SubcategoriaResource::make($subcategoria),
@@ -72,23 +74,26 @@ class SubcategoriaController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(SubCategoriaUpdateRequest $request, Subcategoria $subcategoria)
+
+    public function update(SubCategoriaUpdateRequest $request, Subcategoria $subcategoria) : JsonResponse
     {
-        $subcategoria->update($request->validated());
-        return $this->success(
-            SubcategoriaResource::make($subcategoria),
-            'Subcategoria actualizada correctamente.',
-            HttpsResponseType::HTTP_OK->value
-        );
+        try {
+            DB::beginTransaction();
+            $subcategoria->update($request->validated());
+            DB::commit();
+            return $this->success(
+                SubcategoriaResource::make($subcategoria),
+                'Subcategoria actualizada correctamente.',
+                HttpsResponseType::HTTP_OK->value
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage(), HttpsResponseType::HTTP_INTERNAL_SERVER_ERROR->value);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Subcategoria $subcategoria)
+
+    public function destroy(Subcategoria $subcategoria) : JsonResponse
     {
         $subcategoria->delete();
         return $this->success(null, 'Subcategoria eliminada correctamente.', HttpsResponseType::HTTP_OK->value);
