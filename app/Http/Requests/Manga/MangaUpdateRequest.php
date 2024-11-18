@@ -11,7 +11,7 @@ class MangaUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,10 +22,10 @@ class MangaUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titulo' => 'required|string|max:255',
-            'portada' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'categoria_id' => 'required|exists:categorias,id',
-            'subcategoria_id' => 'required|exists:subcategorias,id',
+            'titulo' => 'sometimes|string|max:255',
+            'portada' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'categoria_id' => 'sometimes|exists:categorias,id',
+            'subcategoria_id' => 'sometimes|exists:subcategorias,id',
         ];
     }
 }
