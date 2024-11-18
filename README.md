@@ -1,66 +1,100 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Test:
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+### API REST con Laravel (11)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Desarrollar una API REST para gestionar el inventario de mangas en una tienda. La API debe incluir un CRUD para el manejo de stock.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Especificaciones de la API**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Áreas de acceso** :
 
-## Learning Laravel
+* Zona pública: permite visualizar el listado de mangas disponibles.
+* Zona privada: permite la gestión completa de los mangas (creación, actualización y eliminación).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Propiedades de un manga**:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* Título
+* Portada
+* Categoría
+* Subcategoría
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Requisitos adicionales** :
 
-## Laravel Sponsors
+* La categoría y subcategoría deben generarse de forma dinámica (una categoría puede contener varias subcategorías).
+* Las imágenes de portada deben almacenarse en el sistema de archivos de Laravel (directorio `Storage`).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. **Documentación y entrega** :
 
-### Premium Partners
+* Subir el proyecto a un repositorio de GitHub.
+* Incluir una documentación simplificada con las rutas principales y los puntos clave para su implementación
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**Necesario para instalar y utilizar el proyecto:**
 
-## Contributing
+1. Clonar el repositorio.
+2. cd nombre del repositorio.
+3. Composer install.
+4. Composer update.
+5. Copia el archivo `.env.example` a `.env.`
+6. php artisan key:generate.
+7. php artisan storage:link.
+8. php artisan migrate --seed -> Para crear un usuario con acceso a zona privada, algunas categorias y subcategorias.
+9. php artisan serve.
+10. http://127.0.0.1:8000 -> A partir de la url dada se puede utilizar los request realizados en POSTMAN.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Link para los request de postman:** 
 
-## Code of Conduct
+**Implementacion del proyecto:**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Consideramos el siguiente diseño:
 
-## Security Vulnerabilities
+* Para determinar zona publica y zona privada, utilizamos laravel breeze API, con el sistema de login y register. De manera que los usuarios que no tengan una cuenta solo pueden acceder a la zona publica y el usuario que si tiene cuenta que es unico y es el ADMIN, es autenticado por SANCTUM, con su respectivo Bearer-Token.
+* Para el diseño de las tablas y relaciones tomamos en cuenta lo siguiente:
+* Categorias:
+  * ID (ULID)
+  * Nombre
+* Subcategorias:
+  * ID (ULID)
+  * Nombre
+  * Categoria_id
+* Manga:
+  * ID (ULID)
+  * Nombre
+  * Portada
+  * Categoria_id
+  * Subcategoria_id
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Todas las ID, son de tipo ULID  ya que es una excelente opción para reemplazar los IDs incrementales en Laravel, especialmente cuando se busca una mayor escalabilidad, unicidad y orden en los datos.
 
-## License
+Fue pensado de manera que todo manga tiene asociado solo 1 categoria y 1 subcategoria, ademas, a su vez que una categoria puede estar relacionada con 1 o varias subcategorias y que una subcategoria pertecene solo a 1 manga.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Pero tambien sabemos, que en el caso de que no sea como en el test planteado, es decir que un manga tenga mas de 1 categoria asociada y subcategorias, el diseño varía y podria implicar una tabla pivote para esto. En este caso, otra manera de diseñar la BD para considerar categorias y subcategorias, es solo tener 1 tabla de categorias y añadirle un atributo llamado "parent_id" haciendo referencia a otra categoria pero correspondiente a la misma tabla, "un tipo de relacion  llamada recursiva".
+
+**Diagrama para este TEST:**
+
+![1731893480554](image/README/1731893480554.png)
+
+El test solo menciona el CRUD de los mangas, pero decidimos sumarle CRUD a las categorias y subcategorias, los cuales se pueden observar en los request del POSTMAN. 
+
+**Rutas principales:**
+
+No auth:
+
+* url/api/public/mangas ->url = http://127.0.0.1:8000 -> Para obtener todos los mangas sin iniciar sesion (GET)
+
+Auth: Para acceder a la zona privada puede utilizar el siguiente usuario al momento de realizar login en la carpeta Auth de Postman
+
+* email:test@example.com
+* password: password -> Una vez iniciado sesion obtendra como respuesta el token para acceder, este debe ser colocado en POSTMAN-> ENVIROMENTS -> GLOBALS -> SANCTUM_TOKEN initial value y current value.
+
+  ![1731893918337](image/README/1731893918337.png)
+* Manga:
+
+  * url/api/mangas -> Para obtener todos los mangas autenticado (GET)
+  * url/api/mangas -> (POST) Para crear un manga con sus respectivos atributos anteriormente mencionados.
+  * url/api/mangas/{id_manga} -> (GET) Para observar la informacion de 1 manga en particular
+  * url/api/mangas/{id_manga} -> (POST) y en el body con _method: "put o patch"
+  * url/api/mangas/{id_manga} -> (DELETE) Para eliminar un manga en particular
+* Categoria y subcategoria, idem anterior, pero con el modelo correspondiente.
+
+![1731893437626](image/README/1731893437626.png)
