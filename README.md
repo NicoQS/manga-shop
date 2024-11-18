@@ -1,5 +1,3 @@
-Test:
-
 
 ### API REST con Laravel (11)
 
@@ -42,7 +40,7 @@ Desarrollar una API REST para gestionar el inventario de mangas en una tienda. L
 9. php artisan serve.
 10. http://127.0.0.1:8000 -> A partir de la url dada se puede utilizar los request realizados en POSTMAN.
 
-**Link para los request de postman:** 
+**Link para los request de postman:**
 
 **Implementacion del proyecto:**
 
@@ -74,7 +72,7 @@ Pero tambien sabemos, que en el caso de que no sea como en el test planteado, es
 
 ![1731893480554](image/README/1731893480554.png)
 
-El test solo menciona el CRUD de los mangas, pero decidimos sumarle CRUD a las categorias y subcategorias, los cuales se pueden observar en los request del POSTMAN. 
+El test solo menciona el CRUD de los mangas, pero decidimos sumarle CRUD a las categorias y subcategorias, los cuales se pueden observar en los request del POSTMAN.
 
 **Rutas principales:**
 
