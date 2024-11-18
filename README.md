@@ -1,4 +1,3 @@
-
 ### API REST con Laravel (11)
 
 Desarrollar una API REST para gestionar el inventario de mangas en una tienda. La API debe incluir un CRUD para el manejo de stock.
@@ -40,7 +39,7 @@ Desarrollar una API REST para gestionar el inventario de mangas en una tienda. L
 9. php artisan serve.
 10. http://127.0.0.1:8000 -> A partir de la url dada se puede utilizar los request realizados en POSTMAN.
 
-**Link para los request de postman:**
+**Link para los request de postman:** https://www.postman.com/solar-shuttle-781005/workspace/pruebas-publicas/collection/33954971-496fe1f3-1848-47c3-aa82-2b100902c76e?action=share&creator=33954971 
 
 **Implementacion del proyecto:**
 
