@@ -21,4 +21,5 @@ enum HttpsResponseType: int
     case HTTP_METHOD_NOT_ALLOWED = 405;
     case HTTP_NOT_ACCEPTABLE = 406;
     case HTTP_REQUEST_TIMEOUT = 408;
+    case HTTP_INTERNAL_SERVER_ERROR = 500;
 }
