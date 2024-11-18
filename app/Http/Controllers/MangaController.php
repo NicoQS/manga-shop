@@ -53,11 +53,11 @@ class MangaController extends Controller
         $data = $request->validated();
         try{
             DB::beginTransaction();
-            $data['portada'] = $request->file('portada')->store('portadas', 'public');
             //validar si la subcategoria pertenece a la categoria
             if (!Subcategoria::where('id', $data['subcategoria_id'])->where('categoria_id', $data['categoria_id'])->exists()) {
                 return $this->error('La subcategoria no pertenece a la categoria.', HttpsResponseType::HTTP_BAD_REQUEST->value);
             }
+            $data['portada'] = $request->file('portada')->store('portadas', 'public');
             $manga = Manga::create(
                 [
                     'titulo' => $data['titulo'],

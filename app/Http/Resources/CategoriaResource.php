@@ -21,8 +21,6 @@ class CategoriaResource extends JsonResource
             'id' => $this->id,
             'nombre' => $this->nombre,
             'subcategoria' => SubcategoriaResource::collection($subcategorias),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ];
     }
 }
