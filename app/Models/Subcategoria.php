@@ -12,7 +12,7 @@ class Subcategoria extends Model
     use HasFactory, HasUlids;
 
     protected $fillable = [
-        'name',
+        'nombre',
         'categoria_id'
     ];
 
