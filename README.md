@@ -1,5 +1,6 @@
 ### API REST con Laravel (11)
 
+**PROBLEMA**
 Desarrollar una API REST para gestionar el inventario de mangas en una tienda. La API debe incluir un CRUD para el manejo de stock.
 
 **Especificaciones de la API**
@@ -21,10 +22,7 @@ Desarrollar una API REST para gestionar el inventario de mangas en una tienda. L
 * La categoría y subcategoría deben generarse de forma dinámica (una categoría puede contener varias subcategorías).
 * Las imágenes de portada deben almacenarse en el sistema de archivos de Laravel (directorio `Storage`).
 
-1. **Documentación y entrega** :
-
-* Subir el proyecto a un repositorio de GitHub.
-* Incluir una documentación simplificada con las rutas principales y los puntos clave para su implementación
+**SOLUCION e IMPLEMENTACION**
 
 **Necesario para instalar y utilizar el proyecto:**
 
